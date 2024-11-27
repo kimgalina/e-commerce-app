@@ -13,9 +13,9 @@ services:
       - "5432:5432"
     networks:
       - microservices-net
-  mongodb:
+  mongo:
     image: mongo
-    container_name: mongo_db
+    container_name: mongo
     ports:
       - 27017:27017
     volumes:
@@ -25,18 +25,22 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=ZX9GoDUf
     networks:
       - microservices-net
+
   mongo-express:
     image: mongo-express
     container_name: mongo_express
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongo
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=e_commerce_app
       - ME_CONFIG_MONGODB_ADMINPASSWORD=ZX9GoDUf
-      - ME_CONFIG_MONGODB_SERVER=mongo_db
+      - ME_CONFIG_MONGODB_SERVER=mongo
     networks:
       - microservices-net
+
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
