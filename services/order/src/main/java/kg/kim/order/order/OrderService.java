@@ -4,6 +4,8 @@ package kg.kim.order.order;
 import jakarta.persistence.EntityNotFoundException;
 import kg.kim.order.customer.CustomerClient;
 import kg.kim.order.exception.BusinessException;
+import kg.kim.order.kafka.OrderConfirmation;
+import kg.kim.order.kafka.OrderProducer;
 import kg.kim.order.orderline.OrderLineRequest;
 import kg.kim.order.orderline.OrderLineService;
 import kg.kim.order.payment.PaymentClient;
@@ -27,7 +29,7 @@ public class OrderService {
     private final PaymentClient paymentClient;
     private final ProductClient productClient;
     private final OrderLineService orderLineService;
-//    private final OrderProducer orderProducer;
+    private final OrderProducer orderProducer;
 
     @Transactional
     public Integer createOrder(OrderRequest request) {
@@ -57,15 +59,15 @@ public class OrderService {
         );
         paymentClient.requestOrderPayment(paymentRequest);
 
-//        orderProducer.sendOrderConfirmation(
-//                new OrderConfirmation(
-//                        request.reference(),
-//                        request.amount(),
-//                        request.paymentMethod(),
-//                        customer,
-//                        purchasedProducts
-//                )
-//        );
+        orderProducer.sendOrderConfirmation(
+                new OrderConfirmation(
+                        request.reference(),
+                        request.amount(),
+                        request.paymentMethod(),
+                        customer,
+                        purchasedProducts
+                )
+        );
 
         return order.getId();
     }
