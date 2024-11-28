@@ -1,4 +1,4 @@
-package kg.kim.product.Category;
+package kg.kim.product.category;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
